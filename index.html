@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameHub - Play Free Online HTML5 Games</title>
+    <meta name="description" content="Play the best free online games at GameHub. Enjoy Break Free, Paper Boy Race and many other exciting HTML5 games.">
+    <link rel="canonical" href="https://www.gamehub.com/">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'apple-gray': '#f5f5f7',
+                        'apple-blue': '#0071e3',
+                        'apple-dark': '#1d1d1f',
+                        'apple-purple': '#bf5af2',
+                        'apple-light': '#fbfbfd'
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f9f9fb 0%, #f2f2f7 100%);
+            min-height: 100vh;
+            color: #1d1d1f;
+        }
+        .game-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 18px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        .game-frame {
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .nav-link {
+            position: relative;
+            padding-bottom: 5px;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #0071e3;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .game-tag {
+            background: rgba(0, 113, 227, 0.1);
+            color: #0071e3;
+            border-radius: 20px;
+            padding: 2px 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .hero-section {
+            background: linear-gradient(135deg, #f0f5ff 0%, #f9f0ff 100%);
+            border-radius: 24px;
+        }
+        .feature-badge {
+            background: linear-gradient(135deg, #0071e3 0%, #bf5af2 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 4px 16px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        footer {
+            background: rgba(245, 245, 247, 0.8);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        @media (max-width: 768px) {
+            .game-frame {
+                aspect-ratio: 9/16;
+            }
+        }
+        .scroll-btn {
+            transition: all 0.3s ease;
+        }
+        .scroll-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 113, 227, 0.3);
+        }
+    </style>
+</head>
+<body class="font-sans">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-200">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-apple-blue to-apple-purple flex items-center justify-center">
+                    <i class="fas fa-gamepad text-white text-xl"></i>
+                </div>
+                <h1 class="text-xl font-bold text-apple-dark">GameHub</h1>
+            </div>
+            
+            <nav class="hidden md:flex space-x-8">
+                <a href="#" class="nav-link text-apple-dark font-medium">Home</a>
+                <a href="#games-section" class="nav-link text-gray-600 hover:text-apple-dark">Games</a>
+                <a href="#" class="nav-link text-gray-600 hover:text-apple-dark">Categories</a>
+                <a href="#" class="nav-link text-gray-600 hover:text-apple-dark">New Releases</a>
+                <a href="#" class="nav-link text-gray-600 hover:text-apple-dark">Contact</a>
+            </nav>
+            
+            <div class="flex items-center space-x-4">
+                <button id="play-now-btn" class="bg-apple-blue text-white px-4 py-2 rounded-full font-medium hover:bg-blue-600 transition scroll-btn">
+                    Play Now
+                </button>
+                <button class="md:hidden text-gray-600">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="container mx-auto px-4 py-10 md:py-16">
+        <div class="hero-section p-6 md:p-12 max-w-4xl mx-auto">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-2/3 mb-8 md:mb-0 md:pr-10">
+                    <span class="feature-badge inline-block mb-4">
+                        <i class="fas fa-star mr-2"></i>New Games Added
+                    </span>
+                    <h1 class="text-3xl md:text-5xl font-bold text-apple-dark leading-tight mb-4">
+                        Play Amazing HTML5 Games Online
+                    </h1>
+                    <p class="text-gray-600 text-lg mb-6">
+                        Enjoy the best collection of free online games. No downloads, no ads - just pure gaming fun!
+                    </p>
+                    <div class="flex space-x-4">
+                        <button id="explore-games-btn" class="bg-apple-blue text-white px-6 py-3 rounded-full font-medium hover:bg-blue-600 transition scroll-btn">
+                            Explore Games
+                        </button>
+                        <button class="border border-gray-300 px-6 py-3 rounded-full font-medium text-apple-dark hover:bg-gray-50 transition">
+                            Learn More
+                        </button>
+                    </div>
+                </div>
+                <div class="md:w-1/3 flex justify-center">
+                    <div class="relative">
+                        <div class="w-48 h-48 rounded-full bg-gradient-to-r from-apple-blue to-apple-purple opacity-20 absolute -top-6 -right-6"></div>
+                        <div class="w-48 h-48 rounded-full bg-gradient-to-r from-apple-purple to-pink-500 opacity-20 absolute -bottom-6 -left-6"></div>
+                        <div class="relative bg-white p-4 rounded-2xl shadow-lg">
+                            <div class="game-frame">
+                                <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1470" alt="Game Preview" class="w-full h-full object-cover rounded-lg">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Games Section -->
+    <section id="games-section" class="container mx-auto px-4 py-8">
+        <div class="text-center mb-12">
+            <h2 class="text-2xl md:text-3xl font-bold text-apple-dark mb-4">Featured Games</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Discover our handpicked selection of the most engaging and popular games. All games are playable directly in your browser.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            <!-- Game 1 -->
+            <div class="game-card p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-apple-dark mb-2">Break Free</h2>
+                        <p class="text-gray-600 italic mb-3">Escape the maze before time runs out!</p>
+                    </div>
+                    <div class="game-tag">Arcade</div>
+                </div>
+                
+                <div class="game-frame mb-4">
+                    <iframe src="https://www.crazygames.com/embed/break-free" style="width: 100%; height: 100%;" frameborder="0" allow="gamepad *;"></iframe>
+                </div>
+                
+                <div class="mb-4">
+                    <h3 class="font-semibold text-lg text-apple-dark mb-2">About Break Free</h3>
+                    <p class="text-gray-600 mb-3">
+                        Break Free is a thrilling puzzle game where you must navigate through complex mazes, avoiding obstacles and solving challenges to escape before time expires. With intuitive controls and increasingly difficult levels, this game will test your reflexes and problem-solving skills.
+                    </p>
+                    <div class="flex items-center text-sm text-gray-500">
+                        <span class="mr-4"><i class="fas fa-user mr-1"></i> Single Player</span>
+                        <span><i class="fas fa-mouse-pointer mr-1"></i> Point & Click</span>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center pt-4 border-t border-gray-100">
+                    <div class="flex items-center">
+                        <div class="flex text-yellow-400 mr-2">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <span class="text-gray-600">4.7</span>
+                    </div>
+                    <button class="bg-apple-blue text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-blue-600 transition">
+                        Play Fullscreen
+                    </button>
+                </div>
+            </div>
+
+            <!-- Game 2 -->
+            <div class="game-card p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-apple-dark mb-2">Paper Boy Race</h2>
+                        <p class="text-gray-600 italic mb-3">Deliver papers in this fast-paced running game!</p>
+                    </div>
+                    <div class="game-tag">Adventure</div>
+                </div>
+                
+                <div class="game-frame mb-4">
+                    <iframe src="https://www.crazygames.com/embed/paper-boy-race-running-game" style="width: 100%; height: 100%;" frameborder="0"></iframe>
+                </div>
+                
+                <div class="mb-4">
+                    <h3 class="font-semibold text-lg text-apple-dark mb-2">About Paper Boy Race</h3>
+                    <p class="text-gray-600 mb-3">
+                        Step into the shoes of a paper delivery boy in this exciting endless runner. Race through vibrant neighborhoods, jump over obstacles, and deliver newspapers to earn points. With colorful graphics and addictive gameplay, Paper Boy Race offers hours of fun for players of all ages.
+                    </p>
+                    <div class="flex items-center text-sm text-gray-500">
+                        <span class="mr-4"><i class="fas fa-user mr-1"></i> Single Player</span>
+                        <span><i class="fas fa-keyboard mr-1"></i> Keyboard</span>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center pt-4 border-t border-gray-100">
+                    <div class="flex items-center">
+                        <div class="flex text-yellow-400 mr-2">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <span class="text-gray-600">4.3</span>
+                    </div>
+                    <button class="bg-apple-blue text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-blue-600 transition">
+                        Play Fullscreen
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Additional Game Cards -->
+            <div class="game-card p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-apple-dark mb-2">Space Explorer</h2>
+                        <p class="text-gray-600 italic mb-3">Journey through the cosmos in this epic adventure!</p>
+                    </div>
+                    <div class="game-tag bg-purple-100 text-purple-700">Sci-Fi</div>
+                </div>
+                
+                <div class="game-frame mb-4 bg-gray-800 rounded-lg flex items-center justify-center">
+                    <div class="text-center text-white p-4">
+                        <i class="fas fa-rocket text-4xl mb-3 text-apple-purple"></i>
+                        <p>Space Explorer Coming Soon</p>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <h3 class="font-semibold text-lg text-apple-dark mb-2">About Space Explorer</h3>
+                    <p class="text-gray-600 mb-3">
+                        Embark on an interstellar journey to discover new planets, battle alien forces, and uncover the mysteries of the universe. With stunning visuals and immersive gameplay, Space Explorer will take you on the adventure of a lifetime.
+                    </p>
+                    <div class="flex items-center text-sm text-gray-500">
+                        <span class="mr-4"><i class="fas fa-users mr-1"></i> Multiplayer</span>
+                        <span><i class="fas fa-gamepad mr-1"></i> Controller</span>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center pt-4 border-t border-gray-100">
+                    <div class="flex items-center">
+                        <div class="flex text-yellow-400 mr-2">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="text-gray-600">4.9</span>
+                    </div>
+                    <button class="bg-gray-300 text-gray-700 px-4 py-2 rounded-full text-sm font-medium cursor-not-allowed">
+                        Coming Soon
+                    </button>
+                </div>
+            </div>
+            
+            <div class="game-card p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-apple-dark mb-2">Ocean Quest</h2>
+                        <p class="text-gray-600 italic mb-3">Dive deep and explore the underwater world!</p>
+                    </div>
+                    <div class="game-tag bg-green-100 text-green-700">Adventure</div>
+                </div>
+                
+                <div class="game-frame mb-4 bg-gray-800 rounded-lg flex items-center justify-center">
+                    <div class="text-center text-white p-4">
+                        <i class="fas fa-water text-4xl mb-3 text-blue-400"></i>
+                        <p>Ocean Quest Coming Soon</p>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <h3 class="font-semibold text-lg text-apple-dark mb-2">About Ocean Quest</h3>
+                    <p class="text-gray-600 mb-3">
+                        Dive into the depths of the ocean in this exploration adventure. Discover hidden treasures, interact with marine life, and solve underwater puzzles. With realistic water physics and beautiful visuals, Ocean Quest offers a truly immersive experience.
+                    </p>
+                    <div class="flex items-center text-sm text-gray-500">
+                        <span class="mr-4"><i class="fas fa-user mr-1"></i> Single Player</span>
+                        <span><i class="fas fa-mouse-pointer mr-1"></i> Point & Click</span>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center pt-4 border-t border-gray-100">
+                    <div class="flex items-center">
+                        <div class="flex text-yellow-400 mr-2">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <span class="text-gray-600">4.5</span>
+                    </div>
+                    <button class="bg-gray-300 text-gray-700 px-4 py-2 rounded-full text-sm font-medium cursor-not-allowed">
+                        Coming Soon
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="container mx-auto px-4 py-12">
+        <div class="max-w-4xl mx-auto text-center mb-12">
+            <h2 class="text-2xl md:text-3xl font-bold text-apple-dark mb-4">Why Choose GameHub?</h2>
+            <p class="text-gray-600">
+                We offer the best gaming experience with our carefully selected collection of HTML5 games
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center">
+                <div class="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-plug text-apple-blue text-2xl"></i>
+                </div>
+                <h3 class="font-bold text-lg text-apple-dark mb-2">No Downloads</h3>
+                <p class="text-gray-600">
+                    All games run directly in your browser. No installation required - just click and play!
+                </p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center">
+                <div class="w-16 h-16 rounded-full bg-purple-50 flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-ad text-apple-purple text-2xl"></i>
+                </div>
+                <h3 class="font-bold text-lg text-apple-dark mb-2">Ad-Free Experience</h3>
+                <p class="text-gray-600">
+                    Enjoy uninterrupted gaming without annoying ads or pop-ups.
+                </p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center">
+                <div class="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-mobile-alt text-green-500 text-2xl"></i>
+                </div>
+                <h3 class="font-bold text-lg text-apple-dark mb-2">Mobile Friendly</h3>
+                <p class="text-gray-600">
+                    Play on any device - our games work perfectly on desktop, tablet and mobile.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="container mx-auto px-4 py-12">
+        <div class="max-w-4xl mx-auto text-center mb-12">
+            <h2 class="text-2xl md:text-3xl font-bold text-apple-dark mb-4">What Gamers Say</h2>
+            <p class="text-gray-600">
+                Hear from our community of passionate gamers
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 rounded-full bg-blue-200 flex items-center justify-center mr-4">
+                        <span class="text-apple-dark font-bold">JD</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-apple-dark">John D.</h3>
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-gray-600">
+                    "Break Free is incredibly addictive! The puzzles get progressively harder but never frustrating. Perfect for quick gaming sessions."
+                </p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 rounded-full bg-purple-200 flex items-center justify-center mr-4">
+                        <span class="text-apple-dark font-bold">SA</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-apple-dark">Sarah A.</h3>
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-gray-600">
+                    "Paper Boy Race brings back so many childhood memories. The controls are smooth and the gameplay is super fun!"
+                </p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 rounded-full bg-green-200 flex items-center justify-center mr-4">
+                        <span class="text-apple-dark font-bold">MT</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-apple-dark">Mike T.</h3>
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-gray-600">
+                    "GameHub has become my go-to site for quick gaming sessions. The selection is great and everything runs smoothly."
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="mt-16">
+        <div class="container mx-auto px-4 py-10">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-6xl mx-auto">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-r from-apple-blue to-apple-purple flex items-center justify-center">
+                            <i class="fas fa-gamepad text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-apple-dark">GameHub</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">
+                        Your premier destination for free online HTML5 games. Play now for endless fun!
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-500 hover:text-apple-blue"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-500 hover:text-apple-blue"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-500 hover:text-apple-blue"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-500 hover:text-apple-blue"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold text-lg text-apple-dark mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-600 hover:text-apple-blue">Home</a></li>
+                        <li><a href="#games-section" class="text-gray-600 hover:text-apple-blue">All Games</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-apple-blue">New Releases</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-apple-blue">Top Rated</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-apple-blue">Categories</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold text-lg text-apple-dark mb-4">Categories</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-600 hover:text-apple-blue">Action</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-apple-blue">Adventure</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-apple-blue">Puzzle</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-apple-blue">Racing</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-apple-blue">Sports</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold text-lg text-apple-dark mb-4">Newsletter</h4>
+                    <p class="text-gray-600 mb-4">
+                        Subscribe to get updates on new games and features.
+                    </p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email" class="px-4 py-2 w-full rounded-l-lg border border-r-0 border-gray-300 focus:outline-none focus:ring-1 focus:ring-apple-blue">
+                        <button class="bg-apple-blue text-white px-4 rounded-r-lg">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-200 mt-10 pt-6 text-center text-gray-500">
+                <p>&copy; 2023 GameHub. All rights reserved. | Designed with <i class="fas fa-heart text-red-500"></i> for gamers</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Action Button for Mobile -->
+    <div class="fixed bottom-6 right-6 md:hidden">
+        <button class="w-14 h-14 rounded-full bg-apple-blue text-white flex items-center justify-center shadow-lg">
+            <i class="fas fa-gamepad text-xl"></i>
+        </button>
+    </div>
+    
+    <!-- Scroll to top button -->
+    <button id="scroll-top" class="fixed bottom-6 right-6 hidden md:block bg-apple-blue text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition opacity-0">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // Smooth scroll to games section
+        function scrollToGames() {
+            const gamesSection = document.getElementById('games-section');
+            gamesSection.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Add event listeners to buttons
+        document.getElementById('explore-games-btn').addEventListener('click', scrollToGames);
+        document.getElementById('play-now-btn').addEventListener('click', scrollToGames);
+        
+        // Scroll to top button functionality
+        const scrollTopButton = document.getElementById('scroll-top');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollTopButton.classList.remove('opacity-0');
+                scrollTopButton.classList.add('opacity-100');
+            } else {
+                scrollTopButton.classList.remove('opacity-100');
+                scrollTopButton.classList.add('opacity-0');
+            }
+        });
+        
+        scrollTopButton.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
